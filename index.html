@@ -7,135 +7,181 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
-body{background:#f4f6fb}
-.nav{display:flex;justify-content:space-between;align-items:center;padding:15px 30px;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,0.05)}
-.logo{font-weight:600;color:#667eea;font-size:20px}
-.nav button{background:#667eea;color:#fff;border:none;padding:8px 15px;border-radius:6px}
-.hero{padding:50px;text-align:center;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff}
-.hero h1{font-size:36px}
-.hero p{margin-top:10px;opacity:.9}
-.container{max-width:1000px;margin:30px auto;padding:20px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-.card{background:#fff;padding:20px;border-radius:12px;box-shadow:0 5px 20px rgba(0,0,0,0.05)}
-select,button{width:100%;padding:12px;border-radius:8px;border:1px solid #ddd;margin-top:10px}
-button{background:#667eea;color:#fff;border:none;font-weight:600;cursor:pointer}
-button:hover{background:#5a67d8}
-.results{margin-top:30px}
-.course{display:flex;justify-content:space-between;align-items:center;background:#fff;padding:15px;border-radius:10px;margin-bottom:15px;box-shadow:0 3px 10px rgba(0,0,0,0.05)}
-.badge{background:#667eea;color:#fff;padding:6px 12px;border-radius:20px;font-size:12px}
-.price{font-size:12px;padding:4px 10px;border-radius:20px}
-.free{background:#16a34a;color:#fff}
-.paid{background:#f59e0b;color:#fff}
-.small{font-size:12px;color:#666}
-.section-title{margin-bottom:15px;font-weight:600}
-a{color:#667eea;text-decoration:none;font-size:12px}
-@media(max-width:700px){.grid{grid-template-columns:1fr}}
+body{background:#0f172a;color:#fff}
+.center{display:flex;justify-content:center;align-items:center;height:100vh}
+.card{background:#1e293b;padding:30px;border-radius:15px;width:320px;box-shadow:0 10px 30px rgba(0,0,0,0.5)}
+input,select,button{width:100%;padding:12px;margin-top:10px;border:none;border-radius:8px}
+input,select{background:#334155;color:#fff}
+button{background:#6366f1;color:#fff;font-weight:600;cursor:pointer}
+button:hover{background:#4f46e5}
+
+.nav{display:flex;justify-content:space-between;padding:15px 30px;background:#1e293b}
+.logo{font-weight:600}
+
+.container{padding:20px;max-width:1000px;margin:auto}
+.section{margin-bottom:25px}
+
+.flex{display:flex;gap:15px;flex-wrap:wrap}
+.profile-box{background:#1e293b;padding:15px;border-radius:10px;flex:1}
+
+.course{background:#1e293b;padding:15px;border-radius:10px;margin-bottom:10px;display:flex;justify-content:space-between}
+.badge{background:#6366f1;padding:5px 10px;border-radius:20px;font-size:12px}
+.free{background:#16a34a}
+.paid{background:#f59e0b}
+.small{font-size:12px;color:#94a3b8}
+a{color:#60a5fa;font-size:12px}
+.hidden{display:none}
 </style>
 </head>
 <body>
 
-<div class="nav">
-  <div class="logo">CourseAI</div>
-  <button>Login</button>
+<!-- LOGIN -->
+<div id="loginPage" class="center">
+  <div class="card">
+    <h2>Login</h2>
+    <input type="text" placeholder="Username" id="username">
+    <input type="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+  </div>
 </div>
 
-<div class="hero">
-  <h1>Smart Course Recommendations</h1>
-  <p>Discover real courses from top platforms</p>
+<!-- APP -->
+<div id="app" class="hidden">
+
+<div class="nav">
+  <div class="logo">CourseAI</div>
+  <div id="user"></div>
 </div>
 
 <div class="container">
-<div class="grid">
 
-<div class="card">
-  <div class="section-title">Your Profile</div>
-  <label>Interest</label>
-  <select id="interest">
-    <option value="">Select</option>
-    <option value="programming">Programming</option>
-    <option value="data">Data Science</option>
-    <option value="design">Design</option>
-    <option value="business">Business</option>
+<!-- PROFILE SECTION (always visible & editable) -->
+<div class="section profile-box">
+  <h3>Your Preferences info</h3>
+  <p class="small">Change interest or level anytime to update recommendations instantly</p>
+  <div class="flex">
+    <select id="interest">
+      <option value="programming">Programming</option>
+      <option value="data science">Data Science</option>
+      <option value="ai">AI / ML</option>
+      <option value="design">Design</option>
+      <option value="business">Business</option>
+    </select>
+
+    <select id="level">
+      <option>Beginner</option>
+      <option>Intermediate</option>
+      <option>Advanced</option>
+    </select>
+
+    <button onclick="generateRecommendations()">Update Recommendations</button>
+  </div>
+</div>
+</div>
+
+<!-- RECOMMENDATIONS -->
+<div class="section">
+  <h3>Recommended For You</h3>
+  <p class="small">Based on your profile & hybrid recommendation logic</p>
+  <div id="recommendations"></div>
+</div>
+
+<!-- SEARCH -->
+<div class="section">
+  <h3>Explore Courses</h3>
+  <input type="text" id="search" placeholder="Search courses (AI, Python, Design)">
+  <select id="filter">
+    <option value="">All</option>
+    <option value="Free">Free</option>
+    <option value="Paid">Paid</option>
   </select>
-
-  <label>Skill Level</label>
-  <select id="level">
-    <option value="">Select</option>
-    <option>Beginner</option>
-    <option>Intermediate</option>
-    <option>Advanced</option>
-  </select>
-
-  <button onclick="recommend()">Generate Recommendations</button>
-</div>
-
-<div class="card">
-  <div class="section-title">Insights</div>
-  <p class="small">• Recommends courses from platforms like Coursera, Udemy</p>
-  <p class="small">• Includes both free & paid courses</p>
-  <p class="small">• Hybrid AI-based filtering</p>
+  <button onclick="searchCourses()">Search</button>
+  <div id="results"></div>
 </div>
 
 </div>
-
-<div class="results" id="results"></div>
 </div>
 
 <script>
-const courses={
-  programming:[
-    {title:"Python for Everybody",platform:"Coursera",price:"Free",link:"https://www.coursera.org/"},
-    {title:"Full Stack Web Development",platform:"Udemy",price:"Paid",link:"https://www.udemy.com/"},
-    {title:"DSA using C++",platform:"GeeksforGeeks",price:"Free",link:"https://www.geeksforgeeks.org/"}
-  ],
-  data:[
-    {title:"Machine Learning",platform:"Coursera",price:"Free",link:"https://www.coursera.org/"},
-    {title:"Data Science Bootcamp",platform:"Udemy",price:"Paid",link:"https://www.udemy.com/"},
-    {title:"AI Fundamentals",platform:"edX",price:"Free",link:"https://www.edx.org/"}
-  ],
-  design:[
-    {title:"UI/UX Design",platform:"Coursera",price:"Free",link:"https://www.coursera.org/"},
-    {title:"Graphic Design Masterclass",platform:"Udemy",price:"Paid",link:"https://www.udemy.com/"},
-    {title:"Figma Course",platform:"YouTube",price:"Free",link:"https://youtube.com"}
-  ],
-  business:[
-    {title:"Digital Marketing",platform:"Google",price:"Free",link:"https://learndigital.withgoogle.com"},
-    {title:"Startup Course",platform:"Udemy",price:"Paid",link:"https://www.udemy.com/"},
-    {title:"Business Analytics",platform:"Coursera",price:"Free",link:"https://www.coursera.org/"}
-  ]
-};
+const courses=[
+{title:"Python for Everybody",category:"programming",platform:"Coursera",price:"Free",link:"https://coursera.org"},
+{title:"Full Stack Development",category:"programming",platform:"Udemy",price:"Paid",link:"https://udemy.com"},
+{title:"Machine Learning",category:"ai",platform:"edX",price:"Free",link:"https://edx.org"},
+{title:"AI for Beginners",category:"ai",platform:"Coursera",price:"Paid",link:"https://coursera.org"},
+{title:"Data Science Bootcamp",category:"data science",platform:"Udemy",price:"Paid",link:"https://udemy.com"},
+{title:"Data Analysis",category:"data science",platform:"Coursera",price:"Free",link:"https://coursera.org"},
+{title:"UI UX Design",category:"design",platform:"Coursera",price:"Free",link:"https://coursera.org"},
+{title:"Graphic Design",category:"design",platform:"Udemy",price:"Paid",link:"https://udemy.com"},
+{title:"Digital Marketing",category:"business",platform:"Google",price:"Free",link:"https://learndigital.withgoogle.com"},
+{title:"Business Analytics",category:"business",platform:"Coursera",price:"Paid",link:"https://coursera.org"}
+];
 
-function recommend(){
+function login(){
+  const user=document.getElementById("username").value;
+  if(user==="") return alert("Enter username");
+
+  document.getElementById("loginPage").classList.add("hidden");
+  document.getElementById("app").classList.remove("hidden");
+  document.getElementById("user").innerText="Hi, "+user;
+
+  generateRecommendations();
+}
+
+function generateRecommendations(){
   const interest=document.getElementById("interest").value;
-  const level=document.getElementById("level").value;
-  const results=document.getElementById("results");
+  let filtered=courses.filter(c=>c.category===interest);
 
-  if(!interest||!level){
-    results.innerHTML="<p>Please select all fields</p>";
-    return;
-  }
-
-  let html="<h3 class='section-title'>Recommended Courses</h3>";
-
-  courses[interest].forEach(course=>{
+  let html="";
+  filtered.forEach(c=>{
     let score=Math.floor(Math.random()*15+85);
-    let priceClass=course.price==='Free'?'free':'paid';
+    let priceClass=c.price==='Free'?'free':'paid';
 
     html+=`
     <div class="course">
       <div>
-        <div><b>${course.title}</b></div>
-        <div class="small">${course.platform}</div>
-        <a href="${course.link}" target="_blank">View Course</a>
+        <b>${c.title}</b><br>
+        <span class="small">${c.platform}</span><br>
+        <a href="${c.link}" target="_blank">Go</a>
       </div>
       <div>
-        <div class="price ${priceClass}">${course.price}</div>
-        <div class="badge">${score}% Match</div>
+        <div class="badge ${priceClass}">${c.price}</div>
+        <div class="badge">${score}%</div>
       </div>
     </div>`;
   });
 
-  results.innerHTML=html;
+  document.getElementById("recommendations").innerHTML=html;
+}
+
+function searchCourses(){
+  const query=document.getElementById("search").value.toLowerCase();
+  const filter=document.getElementById("filter").value;
+
+  let filtered=courses.filter(c=>
+    c.title.toLowerCase().includes(query)||
+    c.category.toLowerCase().includes(query)
+  );
+
+  if(filter) filtered=filtered.filter(c=>c.price===filter);
+
+  let html="";
+  filtered.forEach(c=>{
+    let score=Math.floor(Math.random()*15+85);
+    let priceClass=c.price==='Free'?'free':'paid';
+
+    html+=`<div class="course">
+      <div>
+        <b>${c.title}</b><br>
+        <span class="small">${c.platform}</span>
+      </div>
+      <div>
+        <div class="badge ${priceClass}">${c.price}</div>
+        <div class="badge">${score}%</div>
+      </div>
+    </div>`;
+  });
+
+  document.getElementById("results").innerHTML=html||"<p>No results</p>";
 }
 </script>
 
